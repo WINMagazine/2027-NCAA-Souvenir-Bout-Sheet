@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIN Magazine - NCAA/Big 12 Insertion Order</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+Pro:wght@400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --win-red: #c41e3a;
+            --win-red-dark: #9a1830;
+            --win-black: #1a1a1a;
+            --win-gray: #4a4a4a;
+            --win-light: #f5f5f5;
+            --win-border: #ddd;
+        }
+        
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: var(--win-light);
+            color: var(--win-black);
+            line-height: 1.5;
+        }
+        
+        /* Login Screen */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--win-black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .login-box h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 32px;
+            color: var(--win-red);
+            margin-bottom: 5px;
+        }
+        
+        .login-box h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px;
+            color: var(--win-gray);
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+        
+        .login-box input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid var(--win-border);
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .login-box input[type="password"]:focus {
+            outline: none;
+            border-color: var(--win-red);
+        }
+        
+        .login-box button {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            background: var(--win-red);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .login-box button:hover {
+            background: var(--win-red-dark);
+        }
+        
+        .login-error {
+            color: var(--win-red);
+            font-weight: 600;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .main-content {
+            display: none;
+        }
+        
+        .main-content.visible {
+            display: block;
+        }
+        
+        .login-overlay.hidden {
+            display: none;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: var(--win-black);
+            color: white;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            border-bottom: 4px solid var(--win-red);
+        }
+        
+        header h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        header p {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .form-section h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--win-red);
+            border-bottom: 2px solid var(--win-red);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        label {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: var(--win-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        textarea,
+        select {
+            padding: 10px 12px;
+            border: 2px solid var(--win-border);
+            border-radius: 4px;
+            font-size: 15px;
+            font-family: 'Source Sans Pro', sans-serif;
+            transition: border-color 0.2s;
+        }
+        
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--win-red);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: var(--win-light);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        
+        .checkbox-item:hover {
+            background: #eee;
+        }
+        
+        .checkbox-item.selected {
+            background: #fff0f3;
+            border-color: var(--win-red);
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 12px;
+            accent-color: var(--win-red);
+        }
+        
+        .checkbox-item .item-details {
+            flex: 1;
+        }
+        
+        .checkbox-item .item-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .checkbox-item .item-price {
+            font-size: 13px;
+            color: var(--win-gray);
+        }
+        
+        .ad-size-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .ad-size-selector label {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            text-transform: none;
+            cursor: pointer;
+        }
+        
+        .ad-size-selector input[type="radio"] {
+            margin-right: 5px;
+            accent-color: var(--win-red);
+        }
+        
+        /* Premium dropdown styles */
+        .premium-dropdown {
+            margin-top: 8px;
+            display: none;
+            background: white;
+            border: 1px solid var(--win-border);
+            border-radius: 4px;
+            padding: 10px;
+        }
+        
+        .premium-dropdown.show {
+            display: block;
+        }
+        
+        .premium-dropdown label {
+            display: flex;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .premium-dropdown input[type="checkbox"] {
+            margin-right: 8px;
+            accent-color: var(--win-red);
+        }
+        
+        .weight-class-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 8px;
+        }
+        
+        .weight-class-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            background: var(--win-light);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .weight-class-item:hover {
+            background: #eee;
+        }
+        
+        .weight-class-item.selected {
+            background: #fff0f3;
+            border-color: var(--win-red);
+        }
+        
+        .weight-class-item input {
+            margin-right: 8px;
+            accent-color: var(--win-red);
+        }
+        
+        .subsection {
+            margin-bottom: 20px;
+        }
+        
+        .subsection h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--win-gray);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+        
+        .discount-row {
+            display: grid;
+            grid-template-columns: 1fr 150px 40px;
+            gap: 10px;
+            align-items: end;
+            margin-bottom: 10px;
+        }
+        
+        .discount-row button {
+            background: var(--win-red);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            height: 42px;
+        }
+        
+        .discount-row button:hover {
+            background: var(--win-red-dark);
+        }
+        
+        #add-discount {
+            background: none;
+            border: 2px dashed var(--win-border);
+            color: var(--win-gray);
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        #add-discount:hover {
+            border-color: var(--win-red);
+            color: var(--win-red);
+        }
+        
+        .total-section {
+            background: var(--win-black);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .total-section .total-label {
+            font-family: 'Oswald', sans-serif;
+            font-size: 20px;
+            text-transform: uppercase;
+        }
+        
+        .total-section .total-amount {
+            font-family: 'Oswald', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--win-red);
+        }
+        
+        .button-row {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--win-red);
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-primary:hover {
+            background: var(--win-red-dark);
+        }
+        
+        .btn-primary:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: var(--win-gray);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--win-black);
+        }
+        
+        .tickets-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .tickets-row input {
+            width: 80px;
+            text-align: center;
+        }
+        
+        .tickets-row .ticket-total {
+            font-weight: 600;
+            color: var(--win-red);
+        }
+        
+        .big12-discount-check {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        
+        .big12-discount-check input {
+            margin-right: 8px;
+        }
+        
+        .status-message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        
+        .billing-toggle {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .billing-toggle input {
+            margin-right: 8px;
+        }
+        
+        .billing-fields {
+            display: none;
+        }
+        
+        .billing-fields.show {
+            display: block;
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .weight-class-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .button-row {
+                flex-direction: column;
+            }
+            
+            .discount-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-overlay" id="login-overlay">
+        <div class="login-box">
+            <h1>WIN Magazine</h1>
+            <h2>NCAA Insertion Order System</h2>
+            <input type="password" id="login-password" placeholder="Enter Password" onkeypress="if(event.key==='Enter')checkPassword()">
+            <button type="button" onclick="checkPassword()">Access Form</button>
+            <p class="login-error" id="login-error">Incorrect password. Please try again.</p>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+    <div class="container">
+        <header>
+            <h1>2027 NCAA Programs/Big 12 Insertion Order</h1>
+            <p>WIN Magazine • Newton, IA</p>
+        </header>
+        
+        <form id="insertion-order-form">
+            <!-- Customer Information -->
+            <div class="form-section">
+                <h2>Customer Information</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="advertiser">Advertiser Name *</label>
+                        <input type="text" id="advertiser" name="advertiser" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="account-number">Account Number *</label>
+                        <input type="text" id="account-number" name="account-number" required placeholder="e.g., #1581">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contact-name">Contact Name *</label>
+                        <input type="text" id="contact-name" name="contact-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                </div>
+                
+                <div class="billing-toggle">
+                    <input type="checkbox" id="new-billing" name="new-billing">
+                    <label for="new-billing" style="margin: 0; text-transform: none;">New billing address</label>
+                </div>
+                
+                <div class="billing-fields" id="billing-fields">
+                    <div class="form-group full-width">
+                        <label for="billing-address">Billing Address</label>
+                        <textarea id="billing-address" name="billing-address" rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Program Ads -->
+            <div class="form-section">
+                <h2>Program Advertisements</h2>
+                <div class="checkbox-group" id="program-ads">
+                    <div class="checkbox-item" data-program="div1-men">
+                        <input type="checkbox" id="prog-div1-men" name="programs" value="div1-men">
+                        <div class="item-details">
+                            <div class="item-name">Div I Men</div>
+                            <div class="ad-size-selector">
+                                <label><input type="radio" name="size-div1-men" value="full" data-price="2610"> Full $2,610</label>
+                                <label><input type="radio" name="size-div1-men" value="half" data-price="1560"> Half $1,560</label>
+                                <label><input type="radio" name="size-div1-men" value="spread" data-price="4698"> Spread $4,698</label>
+                                <label><input type="radio" name="size-div1-men" value="premium" data-price="0"> Premium ▼</label>
+                            </div>
+                            <div class="premium-dropdown" id="premium-div1-men">
+                                <label><input type="checkbox" name="premium-div1-men" value="back-cover" data-price="3600"> Back Cover - $3,600</label>
+                                <label><input type="checkbox" name="premium-div1-men" value="inside-front" data-price="2970"> Inside Front - $2,970</label>
+                                <label><input type="checkbox" name="premium-div1-men" value="inside-back" data-price="2820"> Inside Back - $2,820</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checkbox-item" data-program="div1-women">
+                        <input type="checkbox" id="prog-div1-women" name="programs" value="div1-women">
+                        <div class="item-details">
+                            <div class="item-name">Div I Women</div>
+                            <div class="ad-size-selector">
+                                <label><input type="radio" name="size-div1-women" value="full" data-price="1450"> Full $1,450</label>
+                                <label><input type="radio" name="size-div1-women" value="half" data-price="775"> Half $775</label>
+                                <label><input type="radio" name="size-div1-women" value="spread" data-price="2610"> Spread $2,610</label>
+                                <label><input type="radio" name="size-div1-women" value="premium" data-price="0"> Premium ▼</label>
+                            </div>
+                            <div class="premium-dropdown" id="premium-div1-women">
+                                <label><input type="checkbox" name="premium-div1-women" value="back-cover" data-price="1850"> Back Cover - $1,850</label>
+                                <label><input type="checkbox" name="premium-div1-women" value="inside-front" data-price="1750"> Inside Front - $1,750</label>
+                                <label><input type="checkbox" name="premium-div1-women" value="inside-back" data-price="1650"> Inside Back - $1,650</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checkbox-item" data-program="div123-men">
+                        <input type="checkbox" id="prog-div123-men" name="programs" value="div123-men">
+                        <div class="item-details">
+                            <div class="item-name">Div I, II & III Men</div>
+                            <div class="ad-size-selector">
+                                <label><input type="radio" name="size-div123-men" value="full" data-price="3360"> Full $3,360</label>
+                                <label><input type="radio" name="size-div123-men" value="half" data-price="2410"> Half $2,410</label>
+                                <label><input type="radio" name="size-div123-men" value="quarter" data-price="1332"> Qtr $1,332</label>
+                                <label><input type="radio" name="size-div123-men" value="spread" data-price="6000"> Spread $6,000</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checkbox-item" data-program="all-programs">
+                        <input type="checkbox" id="prog-all" name="programs" value="all-programs">
+                        <div class="item-details">
+                            <div class="item-name">All Programs</div>
+                            <div class="ad-size-selector">
+                                <label><input type="radio" name="size-all-programs" value="full" data-price="4810"> Full $4,810</label>
+                                <label><input type="radio" name="size-all-programs" value="half" data-price="3185"> Half $3,185</label>
+                                <label><input type="radio" name="size-all-programs" value="spread" data-price="8610"> Spread $8,610</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Weight Class Sponsorships -->
+            <div class="form-section">
+                <h2>Bout Sheet Weight Class Sponsorships</h2>
+                
+                <div class="subsection">
+                    <h3>Men's Weight Classes</h3>
+                    <div class="weight-class-grid" id="mens-weights">
+                        <label class="weight-class-item"><input type="checkbox" name="mens-weight" value="125" data-price="600"> 125 lbs - $600</label>
+                        <label class="weight-class-item"><input type="checkbox" name="mens-weight" value="133" data-price="650"> 133 lbs - $650</label>
+                        <label class="weight-class-item"><input type="checkbox" name="mens-weight" value="141" data-price="700"> 141 lbs - $700</label>
+                        <label class="weight-class-item"><input type="checkbox" name="mens-weight" value="149" data-price="550"> 149 lbs - $550</label>
+                        <label class="weight-class-item"><input type="checkbox" name="mens-weight" value="157" data-price="650"> 157 lbs - $650</label>
+                        <label class="weight-class-item"><input type="checkbox" name="mens-weight" value="165" data-price="600"> 165 lbs - $600</label>
+                        <label class="weight-class-item"><input type="checkbox" name="mens-weight" value="174" data-price="750"> 174 lbs - $750</label>
+                        <label class="weight-class-item"><input type="checkbox" name="mens-weight" value="184" data-price="750"> 184 lbs - $750</label>
+                        <label class="weight-class-item"><input type="checkbox" name="mens-weight" value="197" data-price="650"> 197 lbs - $650</label>
+                        <label class="weight-class-item"><input type="checkbox" name="mens-weight" value="HWT" data-price="750"> HWT - $750</label>
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>Women's Weight Classes</h3>
+                    <div class="weight-class-grid" id="womens-weights">
+                        <label class="weight-class-item"><input type="checkbox" name="womens-weight" value="103" data-price="500"> 103 lbs - $500</label>
+                        <label class="weight-class-item"><input type="checkbox" name="womens-weight" value="110" data-price="500"> 110 lbs - $500</label>
+                        <label class="weight-class-item"><input type="checkbox" name="womens-weight" value="117" data-price="500"> 117 lbs - $500</label>
+                        <label class="weight-class-item"><input type="checkbox" name="womens-weight" value="124" data-price="500"> 124 lbs - $500</label>
+                        <label class="weight-class-item"><input type="checkbox" name="womens-weight" value="131" data-price="500"> 131 lbs - $500</label>
+                        <label class="weight-class-item"><input type="checkbox" name="womens-weight" value="138" data-price="500"> 138 lbs - $500</label>
+                        <label class="weight-class-item"><input type="checkbox" name="womens-weight" value="145" data-price="500"> 145 lbs - $500</label>
+                        <label class="weight-class-item"><input type="checkbox" name="womens-weight" value="160" data-price="500"> 160 lbs - $500</label>
+                        <label class="weight-class-item"><input type="checkbox" name="womens-weight" value="180" data-price="500"> 180 lbs - $500</label>
+                        <label class="weight-class-item"><input type="checkbox" name="womens-weight" value="207" data-price="500"> 207 lbs - $500</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Big 12 & Tickets -->
+            <div class="form-section">
+                <h2>Additional Options</h2>
+                
+                <div class="subsection">
+                    <h3>Big 12 Championship Digital Program</h3>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item" data-program="big12">
+                            <input type="checkbox" id="big12-ad" name="big12" value="big12">
+                            <div class="item-details">
+                                <div class="item-name">Big 12 Digital Program Ad</div>
+                                <div class="ad-size-selector">
+                                    <label><input type="radio" name="size-big12" value="full" data-price="900"> Full $900</label>
+                                    <label><input type="radio" name="size-big12" value="half" data-price="480"> Half $480</label>
+                                </div>
+                                <div class="big12-discount-check">
+                                    <input type="checkbox" id="big12-discount" name="big12-discount" checked>
+                                    <span>Apply 20% NCAA DI discount</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>All-Session Tickets</h3>
+                    <div class="tickets-row">
+                        <label for="ticket-qty">Quantity:</label>
+                        <input type="number" id="ticket-qty" name="ticket-qty" min="0" value="0" step="1">
+                        <span>× $750 each =</span>
+                        <span class="ticket-total" id="ticket-total">$0</span>
+                    </div>
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label for="ticket-emails">Tickets to be emailed to:</label>
+                        <textarea id="ticket-emails" name="ticket-emails" rows="2" placeholder="Enter email addresses..."></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Discounts & Notes -->
+            <div class="form-section">
+                <h2>Discounts & Notes</h2>
+                
+                <div class="subsection">
+                    <h3>Discounts</h3>
+                    <div id="discounts-container"></div>
+                    <button type="button" id="add-discount">+ Add Discount</button>
+                </div>
+                
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="notes">Premium Placement / Misc. Notes</label>
+                    <textarea id="notes" name="notes" placeholder="e.g., 1st Right of Refusal on 184#/160# in 2028..."></textarea>
+                </div>
+                
+                <div class="form-row" style="margin-top: 15px;">
+                    <div class="form-group">
+                        <label for="signed-by">Signed By (WIN Rep)</label>
+                        <input type="text" id="signed-by" name="signed-by" placeholder="e.g., Bryan" value="Bryan">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Total -->
+            <div class="total-section">
+                <span class="total-label">Total Order Price</span>
+                <span class="total-amount" id="total-amount">$0</span>
+            </div>
+            
+            <!-- Buttons -->
+            <div class="button-row">
+                <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear Form</button>
+                <button type="submit" class="btn btn-primary" id="submit-btn">Generate PDF & Send</button>
+            </div>
+            
+            <div class="status-message" id="status-message"></div>
+        </form>
+    </div>
+    
+    <script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script>
+        // N8N Webhook URL - UPDATE THIS
+        const WEBHOOK_URL = 'https://n8n.srv1236164.hstgr.cloud/webhook/2026-NCAA-Programs-Insertion-Order';
+        
+        // Wait for jsPDF to load
+        let jsPDFReady = false;
+        
+        function checkJsPDF() {
+            if (window.jspdf && window.jspdf.jsPDF) {
+                jsPDFReady = true;
+                console.log('jsPDF loaded successfully');
+            } else {
+                console.log('Waiting for jsPDF...');
+                setTimeout(checkJsPDF, 100);
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkJsPDF();
+            setupEventListeners();
+            calculateTotal();
+        });
+        
+        function setupEventListeners() {
+            // Checkbox items click handling
+            document.querySelectorAll('.checkbox-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (e.target.type !== 'checkbox' && e.target.type !== 'radio') {
+                        const checkbox = this.querySelector('input[type="checkbox"]');
+                        checkbox.checked = !checkbox.checked;
+                        checkbox.dispatchEvent(new Event('change'));
+                    }
+                });
+            });
+            
+            // Weight class items click handling
+            document.querySelectorAll('.weight-class-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (e.target.type !== 'checkbox') {
+                        const checkbox = this.querySelector('input[type="checkbox"]');
+                        checkbox.checked = !checkbox.checked;
+                        this.classList.toggle('selected', checkbox.checked);
+                        calculateTotal();
+                    }
+                });
+                
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                checkbox.addEventListener('change', function() {
+                    item.classList.toggle('selected', this.checked);
+                    calculateTotal();
+                });
+            });
+            
+            // Program checkboxes
+            document.querySelectorAll('.checkbox-item input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const item = this.closest('.checkbox-item');
+                    item.classList.toggle('selected', this.checked);
+                    calculateTotal();
+                });
+            });
+            
+            // Radio buttons for ad sizes
+            document.querySelectorAll('.ad-size-selector input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const programName = this.name.replace('size-', '');
+                    const dropdown = document.getElementById('premium-' + programName);
+                    if (dropdown) {
+                        if (this.value === 'premium') {
+                            dropdown.classList.add('show');
+                        } else {
+                            dropdown.classList.remove('show');
+                            // Uncheck all premium options when switching away
+                            dropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                                cb.checked = false;
+                            });
+                        }
+                    }
+                    calculateTotal();
+                });
+            });
+            
+            // Premium checkboxes
+            document.querySelectorAll('.premium-dropdown input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', calculateTotal);
+            });
+            
+            // Ticket quantity
+            document.getElementById('ticket-qty').addEventListener('input', function() {
+                const qty = parseInt(this.value) || 0;
+                document.getElementById('ticket-total').textContent = '$' + (qty * 750).toLocaleString();
+                calculateTotal();
+            });
+            
+            // Big 12 discount checkbox
+            document.getElementById('big12-discount').addEventListener('change', calculateTotal);
+            
+            // Billing toggle
+            document.getElementById('new-billing').addEventListener('change', function() {
+                document.getElementById('billing-fields').classList.toggle('show', this.checked);
+            });
+            
+            // Add discount button
+            document.getElementById('add-discount').addEventListener('click', addDiscountRow);
+            
+            // Form submit
+            document.getElementById('insertion-order-form').addEventListener('submit', handleSubmit);
+        }
+        
+        function addDiscountRow() {
+            const container = document.getElementById('discounts-container');
+            const row = document.createElement('div');
+            row.className = 'discount-row';
+            row.innerHTML = `
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" class="discount-desc" placeholder="e.g., Weight class package discount">
+                </div>
+                <div class="form-group">
+                    <label>Amount ($)</label>
+                    <input type="number" class="discount-amount" min="0" step="0.01" placeholder="0">
+                </div>
+                <button type="button" onclick="removeDiscount(this)">×</button>
+            `;
+            container.appendChild(row);
+            
+            row.querySelector('.discount-amount').addEventListener('input', calculateTotal);
+        }
+        
+        function removeDiscount(btn) {
+            btn.closest('.discount-row').remove();
+            calculateTotal();
+        }
+        
+        function calculateTotal() {
+            let total = 0;
+            
+            // Program ads
+            document.querySelectorAll('#program-ads .checkbox-item').forEach(item => {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                if (checkbox.checked) {
+                    const programName = checkbox.value;
+                    const selectedSize = document.querySelector(`input[name="size-${programName}"]:checked`);
+                    if (selectedSize) {
+                        if (selectedSize.value === 'premium') {
+                            // Add up all checked premium options
+                            document.querySelectorAll(`input[name="premium-${programName}"]:checked`).forEach(premiumCb => {
+                                total += parseInt(premiumCb.dataset.price) || 0;
+                            });
+                        } else {
+                            total += parseInt(selectedSize.dataset.price) || 0;
+                        }
+                    }
+                }
+            });
+            
+            // Men's weight classes
+            document.querySelectorAll('input[name="mens-weight"]:checked').forEach(cb => {
+                total += parseInt(cb.dataset.price) || 0;
+            });
+            
+            // Women's weight classes
+            document.querySelectorAll('input[name="womens-weight"]:checked').forEach(cb => {
+                total += parseInt(cb.dataset.price) || 0;
+            });
+            
+            // Big 12
+            const big12Checkbox = document.getElementById('big12-ad');
+            if (big12Checkbox.checked) {
+                const selectedSize = document.querySelector('input[name="size-big12"]:checked');
+                if (selectedSize) {
+                    let price = parseInt(selectedSize.dataset.price) || 0;
+                    if (document.getElementById('big12-discount').checked) {
+                        price = price * 0.8;
+                    }
+                    total += price;
+                }
+            }
+            
+            // Tickets
+            const ticketQty = parseInt(document.getElementById('ticket-qty').value) || 0;
+            total += ticketQty * 750;
+            
+            // Discounts (subtract)
+            document.querySelectorAll('.discount-amount').forEach(input => {
+                const amount = parseFloat(input.value) || 0;
+                total -= amount;
+            });
+            
+            document.getElementById('total-amount').textContent = '$' + total.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2});
+            
+            return total;
+        }
+        
+        function getFormData() {
+            const data = {
+                advertiser: document.getElementById('advertiser').value,
+                accountNumber: document.getElementById('account-number').value,
+                contactName: document.getElementById('contact-name').value,
+                email: document.getElementById('email').value,
+                billingAddress: document.getElementById('new-billing').checked ? document.getElementById('billing-address').value : '',
+                programs: [],
+                mensWeights: [],
+                womensWeights: [],
+                big12: null,
+                tickets: {
+                    quantity: parseInt(document.getElementById('ticket-qty').value) || 0,
+                    emails: document.getElementById('ticket-emails').value,
+                    total: (parseInt(document.getElementById('ticket-qty').value) || 0) * 750
+                },
+                discounts: [],
+                notes: document.getElementById('notes').value,
+                signedBy: document.getElementById('signed-by').value || 'Bryan',
+                total: calculateTotal(),
+                date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric' })
+            };
+            
+            // Get selected programs
+            const programLabels = {
+                'div1-men': 'Div I Men',
+                'div1-women': 'Div I Women',
+                'div123-men': 'Div I, II & III Men',
+                'all-programs': 'All Programs'
+            };
+            const sizeLabels = { 'full': 'Full Page', 'half': 'Half Page', 'quarter': 'Quarter Page', 'spread': 'Spread' };
+            const premiumLabels = {
+                'back-cover': 'Back Cover',
+                'inside-front': 'Inside Front',
+                'inside-back': 'Inside Back'
+            };
+            
+            document.querySelectorAll('#program-ads .checkbox-item input[type="checkbox"]:checked').forEach(cb => {
+                const programName = cb.value;
+                const selectedSize = document.querySelector(`input[name="size-${programName}"]:checked`);
+                if (selectedSize) {
+                    if (selectedSize.value === 'premium') {
+                        // Add each premium option as a separate line item
+                        document.querySelectorAll(`input[name="premium-${programName}"]:checked`).forEach(premiumCb => {
+                            data.programs.push({
+                                name: programLabels[programName],
+                                size: premiumLabels[premiumCb.value],
+                                price: parseInt(premiumCb.dataset.price)
+                            });
+                        });
+                    } else {
+                        data.programs.push({
+                            name: programLabels[programName],
+                            size: sizeLabels[selectedSize.value],
+                            price: parseInt(selectedSize.dataset.price)
+                        });
+                    }
+                }
+            });
+            
+            // Get men's weights
+            document.querySelectorAll('input[name="mens-weight"]:checked').forEach(cb => {
+                data.mensWeights.push({
+                    weight: cb.value,
+                    price: parseInt(cb.dataset.price)
+                });
+            });
+            
+            // Get women's weights
+            document.querySelectorAll('input[name="womens-weight"]:checked').forEach(cb => {
+                data.womensWeights.push({
+                    weight: cb.value,
+                    price: parseInt(cb.dataset.price)
+                });
+            });
+            
+            // Get Big 12
+            if (document.getElementById('big12-ad').checked) {
+                const selectedSize = document.querySelector('input[name="size-big12"]:checked');
+                if (selectedSize) {
+                    let price = parseInt(selectedSize.dataset.price);
+                    const hasDiscount = document.getElementById('big12-discount').checked;
+                    if (hasDiscount) price = price * 0.8;
+                    data.big12 = {
+                        size: selectedSize.value === 'full' ? 'Full Page' : 'Half Page',
+                        basePrice: parseInt(selectedSize.dataset.price),
+                        discount: hasDiscount,
+                        finalPrice: price
+                    };
+                }
+            }
+            
+            // Get discounts
+            document.querySelectorAll('.discount-row').forEach(row => {
+                const desc = row.querySelector('.discount-desc').value;
+                const amount = parseFloat(row.querySelector('.discount-amount').value) || 0;
+                if (desc || amount) {
+                    data.discounts.push({ description: desc, amount: amount });
+                }
+            });
+            
+            return data;
+        }
+        
+        function generatePDF(data) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'letter'
+            });
+            
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const margin = 15;
+            let y = margin;
+            
+            // Compact header
+            doc.setFillColor(26, 26, 26);
+            doc.rect(0, 0, pageWidth, 24, 'F');
+            doc.setFillColor(196, 30, 58);
+            doc.rect(0, 24, pageWidth, 2, 'F');
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(18);
+            doc.setFont('helvetica', 'bold');
+            doc.text('2027 NCAA Programs/Big 12 Insertion Order', margin, 12);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.text('WIN Magazine | PO Box 194, Newton, IA 50208 | Gina@win-magazine.com | 641-792-4436', margin, 19);
+            
+            y = 34;
+            
+            // Customer Info - compact
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(0, 0, 0);
+            doc.text('Advertiser: ', margin, y);
+            doc.setFont('helvetica', 'normal');
+            doc.text(data.advertiser, margin + 26, y);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Account #: ', pageWidth/2, y);
+            doc.setFont('helvetica', 'normal');
+            doc.text(data.accountNumber, pageWidth/2 + 26, y);
+            y += 7;
+            
+            doc.setFont('helvetica', 'bold');
+            doc.text('Contact: ', margin, y);
+            doc.setFont('helvetica', 'normal');
+            doc.text(data.contactName, margin + 20, y);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Email: ', pageWidth/2, y);
+            doc.setFont('helvetica', 'normal');
+            doc.text(data.email, pageWidth/2 + 16, y);
+            y += 7;
+            
+            if (data.billingAddress) {
+                doc.setFont('helvetica', 'bold');
+                doc.text('Billing: ', margin, y);
+                doc.setFont('helvetica', 'normal');
+                doc.text(data.billingAddress, margin + 18, y);
+                y += 7;
+            }
+            
+            // Divider
+            y += 2;
+            doc.setDrawColor(196, 30, 58);
+            doc.setLineWidth(0.5);
+            doc.line(margin, y, pageWidth - margin, y);
+            doc.setLineWidth(0.2);
+            y += 6;
+            
+            // Order items
+            doc.setFontSize(11);
+            
+            // Programs
+            if (data.programs.length > 0) {
+                doc.setFont('helvetica', 'bold');
+                doc.text('Program Ads:', margin, y);
+                doc.setFont('helvetica', 'normal');
+                data.programs.forEach(function(prog) {
+                    y += 6;
+                    doc.text(prog.name + ' - ' + prog.size, margin + 3, y);
+                    doc.text('$' + prog.price.toLocaleString(), pageWidth - margin, y, { align: 'right' });
+                });
+                y += 8;
+            }
+            
+            // Men's Weight Classes
+            if (data.mensWeights.length > 0) {
+                doc.setFont('helvetica', 'bold');
+                doc.text("Men's Weight Classes:", margin, y);
+                doc.setFont('helvetica', 'normal');
+                var mensWeightStr = data.mensWeights.map(function(w) { return w.weight + ' ($' + w.price + ')'; }).join(', ');
+                y += 6;
+                var splitMens = doc.splitTextToSize(mensWeightStr, pageWidth - margin * 2 - 25);
+                doc.text(splitMens, margin + 3, y);
+                var mensTotal = data.mensWeights.reduce(function(sum, w) { return sum + w.price; }, 0);
+                doc.text('$' + mensTotal.toLocaleString(), pageWidth - margin, y, { align: 'right' });
+                y += splitMens.length * 5 + 5;
+            }
+            
+            // Women's Weight Classes
+            if (data.womensWeights.length > 0) {
+                doc.setFont('helvetica', 'bold');
+                doc.text("Women's Weight Classes:", margin, y);
+                doc.setFont('helvetica', 'normal');
+                var womensWeightStr = data.womensWeights.map(function(w) { return w.weight + ' ($' + w.price + ')'; }).join(', ');
+                y += 6;
+                var splitWomens = doc.splitTextToSize(womensWeightStr, pageWidth - margin * 2 - 25);
+                doc.text(splitWomens, margin + 3, y);
+                var womensTotal = data.womensWeights.reduce(function(sum, w) { return sum + w.price; }, 0);
+                doc.text('$' + womensTotal.toLocaleString(), pageWidth - margin, y, { align: 'right' });
+                y += splitWomens.length * 5 + 5;
+            }
+            
+            // Big 12
+            if (data.big12) {
+                doc.setFont('helvetica', 'bold');
+                doc.text('Big 12 Digital Program:', margin, y);
+                doc.setFont('helvetica', 'normal');
+                y += 6;
+                var big12Text = data.big12.size;
+                if (data.big12.discount) big12Text += ' (20% off)';
+                doc.text(big12Text, margin + 3, y);
+                doc.text('$' + data.big12.finalPrice.toLocaleString(), pageWidth - margin, y, { align: 'right' });
+                y += 8;
+            }
+            
+            // Tickets
+            if (data.tickets.quantity > 0) {
+                doc.setFont('helvetica', 'bold');
+                doc.text('All-Session Tickets:', margin, y);
+                doc.setFont('helvetica', 'normal');
+                y += 6;
+                doc.text(data.tickets.quantity + ' @ $750 each', margin + 3, y);
+                doc.text('$' + data.tickets.total.toLocaleString(), pageWidth - margin, y, { align: 'right' });
+                if (data.tickets.emails) {
+                    y += 5;
+                    doc.setFont('helvetica', 'italic');
+                    doc.text('Email to: ' + data.tickets.emails, margin + 3, y);
+                    doc.setFont('helvetica', 'normal');
+                }
+                y += 8;
+            }
+            
+            // Discounts
+            if (data.discounts.length > 0) {
+                doc.setFont('helvetica', 'bold');
+                doc.text('Discounts:', margin, y);
+                doc.setFont('helvetica', 'normal');
+                data.discounts.forEach(function(d) {
+                    y += 6;
+                    doc.text(d.description || 'Discount', margin + 3, y);
+                    doc.setTextColor(196, 30, 58);
+                    doc.text('-$' + d.amount.toLocaleString(), pageWidth - margin, y, { align: 'right' });
+                    doc.setTextColor(0, 0, 0);
+                });
+                y += 8;
+            }
+            
+            // Notes
+            if (data.notes) {
+                doc.setFont('helvetica', 'bold');
+                doc.text('Notes:', margin, y);
+                doc.setFont('helvetica', 'italic');
+                y += 6;
+                var splitNotes = doc.splitTextToSize(data.notes, pageWidth - margin * 2 - 5);
+                doc.text(splitNotes, margin + 3, y);
+                y += splitNotes.length * 5 + 5;
+            }
+            
+            // Total - simple right aligned
+            y += 4;
+            doc.setDrawColor(0, 0, 0);
+            doc.line(pageWidth - margin - 55, y, pageWidth - margin, y);
+            y += 7;
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(14);
+            doc.text('TOTAL:', pageWidth - margin - 55, y);
+            doc.setTextColor(196, 30, 58);
+            doc.setFontSize(16);
+            doc.text('$' + data.total.toLocaleString(), pageWidth - margin, y, { align: 'right' });
+            doc.setTextColor(0, 0, 0);
+            
+            y += 12;
+            
+            // Check if we need a new page for signatures
+            if (y > pageHeight - 70) {
+                doc.addPage();
+                y = 25;
+            }
+            
+            // SIGNATURES - Both parties sign here
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.text('SIGNATURES', margin, y);
+            doc.setDrawColor(150, 150, 150);
+            doc.line(margin, y + 1, pageWidth - margin, y + 1);
+            y += 10;
+            
+            var col1 = margin;
+            var col2 = pageWidth / 2 + 5;
+            
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(11);
+            doc.text('WIN Magazine Representative:', col1, y);
+            doc.text('Company Representative (' + data.advertiser + '):', col2, y);
+            y += 10;
+            
+            doc.setDrawColor(0, 0, 0);
+            doc.line(col1, y, col1 + 65, y);
+            doc.line(col2, y, col2 + 65, y);
+            y += 4;
+            doc.setFontSize(9);
+            doc.text('Signature', col1, y);
+            doc.text('Signature', col2, y);
+            y += 8;
+            
+            doc.line(col1, y, col1 + 40, y);
+            doc.line(col2, y, col2 + 40, y);
+            y += 4;
+            doc.text('Date', col1, y);
+            doc.text('Date', col2, y);
+            
+            // Sign-off
+            if (data.signedBy) {
+                y += 10;
+                var firstName = data.contactName.split(' ')[0];
+                doc.setFont('helvetica', 'italic');
+                doc.setFontSize(12);
+                doc.text('Thanks ' + firstName + ', ' + data.signedBy, col1, y);
+            }
+            
+            // Payment terms at bottom
+            doc.setFontSize(9);
+            doc.setTextColor(100, 100, 100);
+            doc.setFont('helvetica', 'bold');
+            doc.text('If not paying by check, QuickBooks payment surcharge of 1%, credit card surcharge of 4.6%.', margin, pageHeight - 14);
+            doc.text('Payment Terms: NET 15; 50% due in fall for packages with tickets.', margin, pageHeight - 9);
+            
+            // ============ PAGE 2 - COMPLIANCE ============
+            doc.addPage();
+            
+            // Compact header
+            doc.setFillColor(26, 26, 26);
+            doc.rect(0, 0, pageWidth, 20, 'F');
+            doc.setFillColor(196, 30, 58);
+            doc.rect(0, 20, pageWidth, 2, 'F');
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Ad Cost Compliance', margin, 14);
+            
+            y = 32;
+            
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Advertiser: ' + data.advertiser, margin, y);
+            doc.text('Account #: ' + data.accountNumber, pageWidth - margin, y, { align: 'right' });
+            
+            y += 12;
+            
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            
+            var complianceText = "In connection with client's activities with respect to this agreement (including with respect to the client's advertising materials), client agrees to comply with all applicable federal, state and local laws and regulations, as well as the NCAA's then-current constitution, bylaws, standards, marketing policies and rules as may be updated from time to time in the NCAA's sole discretion (publicly available at www.ncaa.org). Client agrees to hold and save Learfield Communications, LLC, Wrestling Insider Newsmagazine, Inc., the NCAA and each of their member institutions, parents, subsidiaries, affiliates, officers, employees and agents, harmless against any and all claims, losses or damages (including reasonable attorneys' fees and expenses) arising or resulting from client's (or its agent's) breach of this section's provisions.\n\nAdditionally, if any advertising includes photography in which appears any individual not yet old enough to be eligible for collegiate enrollment, then client agrees to inform (and provide Wrestling Insider Newsmagazine, Inc., written notice it has informed) any such individual and such individual's parent/guardian (i) such advertisement can no longer be run once such individual reaches a competitive age and (ii) they should work with such individual's high-school federation to ensure such individual appearing in such advertisement is in compliance with such federation's standards.";
+            
+            var splitCompliance = doc.splitTextToSize(complianceText, pageWidth - margin * 2);
+            doc.text(splitCompliance, margin, y);
+            
+            y += splitCompliance.length * 4.5 + 18;
+            
+            // Company Signature on Page 2
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.text('COMPANY ACCEPTANCE', margin, y);
+            doc.setDrawColor(150, 150, 150);
+            doc.line(margin, y + 1, pageWidth - margin, y + 1);
+            y += 8;
+            
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(11);
+            doc.text('By signing below, I (' + data.contactName + ') agree to the compliance terms stated above on behalf of ' + data.advertiser + ':', margin, y);
+            y += 14;
+            
+            doc.setDrawColor(0, 0, 0);
+            doc.line(margin, y, margin + 75, y);
+            doc.line(pageWidth/2 + 10, y, pageWidth/2 + 55, y);
+            y += 4;
+            doc.setFontSize(9);
+            doc.text('Signature', margin, y);
+            doc.text('Date', pageWidth/2 + 10, y);
+            y += 10;
+            
+            doc.line(margin, y, margin + 75, y);
+            y += 4;
+            doc.text('Print Name', margin, y);
+            
+            // Footer
+            doc.setFontSize(9);
+            doc.setTextColor(100, 100, 100);
+            doc.text('WIN Magazine | PO Box 194, Newton, IA 50208 | Gina@win-magazine.com | 641-792-4436', margin, pageHeight - 10);
+            doc.text('2027 NCAA & Conference Programs', pageWidth - margin, pageHeight - 10, { align: 'right' });
+            
+            return doc;
+        }
+        
+        async function handleSubmit(e) {
+            e.preventDefault();
+            
+            var statusEl = document.getElementById('status-message');
+            var submitBtn = document.getElementById('submit-btn');
+            statusEl.className = 'status-message';
+            statusEl.textContent = '';
+            
+            // Check if jsPDF is loaded
+            if (!jsPDFReady || !window.jspdf) {
+                statusEl.className = 'status-message error';
+                statusEl.textContent = 'PDF library still loading. Please wait a moment and try again.';
+                return;
+            }
+            
+            // Validate required fields
+            var advertiser = document.getElementById('advertiser').value.trim();
+            var accountNumber = document.getElementById('account-number').value.trim();
+            var contactName = document.getElementById('contact-name').value.trim();
+            var email = document.getElementById('email').value.trim();
+            
+            if (!advertiser || !accountNumber || !contactName || !email) {
+                statusEl.className = 'status-message error';
+                statusEl.textContent = 'Please fill in all required customer information fields.';
+                return;
+            }
+            
+            // Show loading state
+            submitBtn.textContent = 'Generating...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Get form data
+                var data = getFormData();
+                
+                // Generate PDF
+                var doc = generatePDF(data);
+                
+                // Create filename
+                var filename = 'WIN_NCAA_InsertionOrder_' + data.advertiser.replace(/[^a-zA-Z0-9]/g, '_') + '_' + new Date().toISOString().split('T')[0] + '.pdf';
+                
+                // Download PDF for preview
+                doc.save(filename);
+                
+                // Send to webhook if configured
+                if (WEBHOOK_URL !== 'YOUR_N8N_WEBHOOK_URL_HERE') {
+                    try {
+                        var pdfBase64 = doc.output('datauristring');
+                        
+                        var response = await fetch(WEBHOOK_URL, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(Object.assign({}, data, {
+                                pdfBase64: pdfBase64,
+                                filename: filename
+                            }))
+                        });
+                        
+                        if (response.ok) {
+                            statusEl.className = 'status-message success';
+                            statusEl.textContent = 'PDF generated and sent to Gina & Bryan! File: ' + filename;
+                        } else {
+                            throw new Error('Webhook returned error');
+                        }
+                    } catch (webhookError) {
+                        statusEl.className = 'status-message error';
+                        statusEl.textContent = 'PDF downloaded but email failed: ' + webhookError.message + '. Please send manually.';
+                    }
+                } else {
+                    statusEl.className = 'status-message success';
+                    statusEl.textContent = 'PDF generated and downloaded: ' + filename + '. Configure webhook URL to enable auto-email.';
+                }
+            } catch (error) {
+                console.error('PDF generation error:', error);
+                statusEl.className = 'status-message error';
+                statusEl.textContent = 'Error generating PDF: ' + error.message;
+            } finally {
+                submitBtn.textContent = 'Generate PDF & Send';
+                submitBtn.disabled = false;
+            }
+        }
+        
+        function resetForm() {
+            if (confirm('Clear all form data?')) {
+                document.getElementById('insertion-order-form').reset();
+                document.getElementById('discounts-container').innerHTML = '';
+                document.querySelectorAll('.checkbox-item, .weight-class-item').forEach(function(el) {
+                    el.classList.remove('selected');
+                });
+                document.getElementById('billing-fields').classList.remove('show');
+                document.getElementById('ticket-total').textContent = '$0';
+                document.getElementById('signed-by').value = 'Bryan';
+                calculateTotal();
+            }
+        }
+    </script>
+</div><!-- end main-content -->
+
+<script>
+    // Login function
+    function checkPassword() {
+        var password = document.getElementById('login-password').value;
+        if (password === 'pin2win3') {
+            document.getElementById('login-overlay').classList.add('hidden');
+            document.getElementById('main-content').classList.add('visible');
+        } else {
+            document.getElementById('login-error').style.display = 'block';
+            document.getElementById('login-password').value = '';
+            document.getElementById('login-password').focus();
+        }
+    }
+</script>
+</body>
+</html>
