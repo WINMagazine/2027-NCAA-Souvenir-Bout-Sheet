@@ -1114,7 +1114,7 @@
                 'inside-back': 'Inside Back'
             };
             
-            document.querySelectorAll('#program-ads .checkbox-item input[type="checkbox"]:checked').forEach(cb => {
+            document.querySelectorAll('input[name="programs"]:checked').forEach(cb => {
                 const programName = cb.value;
                 const selectedSize = document.querySelector(`input[name="size-${programName}"]:checked`);
                 if (selectedSize) {
@@ -1523,7 +1523,7 @@
                 var data = getFormData();
 
                 var missingSize = [];
-                document.querySelectorAll('#program-ads .checkbox-item input[type="checkbox"]:checked').forEach(function(cb) {
+                document.querySelectorAll('input[name="programs"]:checked').forEach(function(cb) {
                     var sized = document.querySelector('input[name="size-' + cb.value + '"]:checked');
                     var hasPremium = document.querySelector('input[name="premium-' + cb.value + '"]:checked');
                     if (!sized || (sized.value === 'premium' && !hasPremium)) {
