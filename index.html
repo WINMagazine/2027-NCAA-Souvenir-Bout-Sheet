@@ -1585,8 +1585,8 @@
                         
                         if (response.ok) {
                             statusEl.className = 'status-message success';
-                            statusEl.textContent = 'PDF generated and sent to Gina & Bryan! File: ' + filename;
-                            showConfirmation(data, filename, true, 'Sent to Gina & Bryan');
+                            statusEl.textContent = 'PDF generated and sent to Gina! File: ' + filename;
+                            showConfirmation(data, filename, true, 'Sent to Gina (gina@win-magazine.com)');
                         } else {
                             throw new Error('Webhook returned error');
                         }
