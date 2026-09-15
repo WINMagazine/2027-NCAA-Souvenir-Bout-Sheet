@@ -880,7 +880,7 @@
         </form>
     </div>
     
-    <script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js" onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';document.head.appendChild(s);"></script>
     <script>
         // N8N Webhook URL - UPDATE THIS
         const WEBHOOK_URL = 'https://n8n.srv1236164.hstgr.cloud/webhook/2027-NCAA-Souvenir-Bout-Sheet';
@@ -907,27 +907,21 @@
         
         function setupEventListeners() {
             // Checkbox items click handling
+            // Only toggle the program when the click is on the item itself (name/padding),
+            // not on nested inputs, size/premium labels, or the Big 12 discount row —
+            // those clicks bubble up here and were wiping the program selection.
             document.querySelectorAll('.checkbox-item').forEach(item => {
                 item.addEventListener('click', function(e) {
-                    if (e.target.type !== 'checkbox' && e.target.type !== 'radio') {
-                        const checkbox = this.querySelector('input[type="checkbox"]');
-                        checkbox.checked = !checkbox.checked;
-                        checkbox.dispatchEvent(new Event('change'));
-                    }
+                    if (e.target.closest('label, input, .big12-discount-check')) return;
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                    checkbox.dispatchEvent(new Event('change'));
                 });
             });
-            
-            // Weight class items click handling
+
+            // Weight class items are <label>s: native activation already toggles the
+            // checkbox, so a manual click toggle here would double-toggle and cancel out.
             document.querySelectorAll('.weight-class-item').forEach(item => {
-                item.addEventListener('click', function(e) {
-                    if (e.target.type !== 'checkbox') {
-                        const checkbox = this.querySelector('input[type="checkbox"]');
-                        checkbox.checked = !checkbox.checked;
-                        this.classList.toggle('selected', checkbox.checked);
-                        calculateTotal();
-                    }
-                });
-                
                 const checkbox = item.querySelector('input[type="checkbox"]');
                 checkbox.addEventListener('change', function() {
                     item.classList.toggle('selected', this.checked);
@@ -948,6 +942,13 @@
             document.querySelectorAll('.ad-size-selector input[type="radio"]').forEach(radio => {
                 radio.addEventListener('change', function() {
                     const programName = this.name.replace('size-', '');
+                    // Picking a size implies wanting the program — check it if it isn't
+                    const item = this.closest('.checkbox-item');
+                    const progCb = item && item.querySelector(':scope > input[type="checkbox"], input[name="programs"], input[name="big12"]');
+                    if (progCb && !progCb.checked) {
+                        progCb.checked = true;
+                        item.classList.add('selected');
+                    }
                     const dropdown = document.getElementById('premium-' + programName);
                     if (dropdown) {
                         if (this.value === 'premium') {
@@ -1516,10 +1517,46 @@
             // Show loading state
             submitBtn.textContent = 'Generating...';
             submitBtn.disabled = true;
-            
+
             try {
                 // Get form data
                 var data = getFormData();
+
+                var missingSize = [];
+                document.querySelectorAll('#program-ads .checkbox-item input[type="checkbox"]:checked').forEach(function(cb) {
+                    var sized = document.querySelector('input[name="size-' + cb.value + '"]:checked');
+                    var hasPremium = document.querySelector('input[name="premium-' + cb.value + '"]:checked');
+                    if (!sized || (sized.value === 'premium' && !hasPremium)) {
+                        missingSize.push(cb.closest('.checkbox-item').querySelector('.item-name').textContent);
+                    }
+                });
+                if (document.getElementById('big12-ad').checked && !document.querySelector('input[name="size-big12"]:checked')) {
+                    missingSize.push('Big 12 Digital Program');
+                }
+                if (missingSize.length > 0) {
+                    statusEl.className = 'status-message error';
+                    statusEl.textContent = 'Select an ad size for: ' + missingSize.join(', ');
+                    submitBtn.textContent = 'Generate PDF & Send';
+                    submitBtn.disabled = false;
+                    return;
+                }
+
+                if (data.programs.length === 0 && data.mensWeights.length === 0 &&
+                    data.womensWeights.length === 0 && !data.big12 && data.tickets.quantity === 0) {
+                    statusEl.className = 'status-message error';
+                    statusEl.textContent = 'No items selected. Choose at least one program ad, weight class, Big 12 ad, or tickets.';
+                    submitBtn.textContent = 'Generate PDF & Send';
+                    submitBtn.disabled = false;
+                    return;
+                }
+
+                if (data.total < 0) {
+                    statusEl.className = 'status-message error';
+                    statusEl.textContent = 'Total is negative ($' + data.total.toLocaleString() + '). Check discount amounts.';
+                    submitBtn.textContent = 'Generate PDF & Send';
+                    submitBtn.disabled = false;
+                    return;
+                }
                 
                 // Generate PDF
                 var doc = generatePDF(data);
