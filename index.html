@@ -106,6 +106,97 @@
             margin-top: 15px;
             display: none;
         }
+
+        .confirmation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 26, 26, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9998;
+            padding: 20px;
+        }
+
+        .confirmation-overlay.show {
+            display: flex;
+        }
+
+        .confirmation-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-width: 480px;
+            width: 100%;
+        }
+
+        .confirmation-check {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #28a745;
+            color: white;
+            font-size: 40px;
+            line-height: 70px;
+            margin: 0 auto 20px;
+        }
+
+        .confirmation-check.warn {
+            background: #e0a800;
+        }
+
+        .confirmation-box h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 28px;
+            color: var(--win-red);
+            margin-bottom: 8px;
+        }
+
+        .confirmation-box p {
+            color: var(--win-gray);
+            margin-bottom: 20px;
+        }
+
+        .confirmation-details {
+            background: var(--win-light);
+            border: 1px solid var(--win-border);
+            border-radius: 8px;
+            padding: 15px 20px;
+            text-align: left;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .confirmation-details div {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 4px 0;
+        }
+
+        .confirmation-details span:first-child {
+            font-weight: 600;
+            color: var(--win-black);
+            white-space: nowrap;
+        }
+
+        .confirmation-details span:last-child {
+            color: var(--win-gray);
+            word-break: break-all;
+            text-align: right;
+        }
+
+        .confirmation-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
         
         .main-content {
             display: none;
@@ -1458,16 +1549,19 @@
                         if (response.ok) {
                             statusEl.className = 'status-message success';
                             statusEl.textContent = 'PDF generated and sent to Gina & Bryan! File: ' + filename;
+                            showConfirmation(data, filename, true, 'Sent to Gina & Bryan');
                         } else {
                             throw new Error('Webhook returned error');
                         }
                     } catch (webhookError) {
                         statusEl.className = 'status-message error';
                         statusEl.textContent = 'PDF downloaded but email failed: ' + webhookError.message + '. Please send manually.';
+                        showConfirmation(data, filename, false, 'PDF downloaded — email failed, please send manually');
                     }
                 } else {
                     statusEl.className = 'status-message success';
                     statusEl.textContent = 'PDF generated and downloaded: ' + filename + '. Configure webhook URL to enable auto-email.';
+                    showConfirmation(data, filename, true, 'PDF downloaded to your computer');
                 }
             } catch (error) {
                 console.error('PDF generation error:', error);
@@ -1479,6 +1573,52 @@
             }
         }
         
+        function showConfirmation(data, filename, sent, statusText) {
+            document.getElementById('conf-advertiser').textContent = data.advertiser;
+            document.getElementById('conf-contact').textContent = data.contactName;
+            document.getElementById('conf-email').textContent = data.email;
+            document.getElementById('conf-total').textContent = '$' + Number(data.total).toLocaleString();
+            document.getElementById('conf-filename').textContent = filename;
+            document.getElementById('conf-status').textContent = statusText;
+
+            var check = document.getElementById('confirmation-check');
+            var title = document.getElementById('confirmation-title');
+            var subtitle = document.getElementById('confirmation-subtitle');
+            if (sent) {
+                check.className = 'confirmation-check';
+                check.innerHTML = '&#10003;';
+                title.textContent = 'Order Submitted!';
+                subtitle.textContent = 'Your insertion order PDF has been generated.';
+            } else {
+                check.className = 'confirmation-check warn';
+                check.innerHTML = '!';
+                title.textContent = 'Order Generated — Action Needed';
+                subtitle.textContent = 'The PDF downloaded, but the email could not be sent automatically.';
+            }
+
+            document.getElementById('confirmation-overlay').classList.add('show');
+        }
+
+        function closeConfirmation() {
+            document.getElementById('confirmation-overlay').classList.remove('show');
+        }
+
+        function newOrder() {
+            closeConfirmation();
+            document.getElementById('insertion-order-form').reset();
+            document.getElementById('discounts-container').innerHTML = '';
+            document.querySelectorAll('.checkbox-item, .weight-class-item').forEach(function(el) {
+                el.classList.remove('selected');
+            });
+            document.getElementById('billing-fields').classList.remove('show');
+            document.getElementById('ticket-total').textContent = '$0';
+            document.getElementById('signed-by').value = 'Bryan';
+            document.getElementById('status-message').className = 'status-message';
+            document.getElementById('status-message').textContent = '';
+            calculateTotal();
+            window.scrollTo(0, 0);
+        }
+
         function resetForm() {
             if (confirm('Clear all form data?')) {
                 document.getElementById('insertion-order-form').reset();
@@ -1494,6 +1634,27 @@
         }
     </script>
 </div><!-- end main-content -->
+
+<!-- Confirmation Overlay -->
+<div class="confirmation-overlay" id="confirmation-overlay">
+    <div class="confirmation-box">
+        <div class="confirmation-check" id="confirmation-check">&#10003;</div>
+        <h1 id="confirmation-title">Order Submitted!</h1>
+        <p id="confirmation-subtitle">Your insertion order PDF has been generated.</p>
+        <div class="confirmation-details">
+            <div><span>Advertiser:</span> <span id="conf-advertiser"></span></div>
+            <div><span>Contact:</span> <span id="conf-contact"></span></div>
+            <div><span>Email:</span> <span id="conf-email"></span></div>
+            <div><span>Total:</span> <span id="conf-total"></span></div>
+            <div><span>File:</span> <span id="conf-filename"></span></div>
+            <div><span>Status:</span> <span id="conf-status"></span></div>
+        </div>
+        <div class="confirmation-buttons">
+            <button type="button" class="btn btn-secondary" onclick="closeConfirmation()">Back to Form</button>
+            <button type="button" class="btn btn-primary" onclick="newOrder()">Start New Order</button>
+        </div>
+    </div>
+</div>
 
 <script>
     // Login function
